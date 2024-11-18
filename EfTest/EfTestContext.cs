@@ -23,6 +23,7 @@ public class EfTestContext : DbContext
 				Console.WriteLine(str);
 
 			//When EF has just ran the second query (to get teams), add a new team with a new vehicle
+			//EF8
 			/*
 			  info: 19/11/2024 09:20:59.994 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command)
 			  Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -36,7 +37,22 @@ public class EfTestContext : DbContext
 			  ORDER BY [p].[PersonId], [t0].[PeoplePersonId], [t0].[TeamsId], [t0].[Id]
 			*/
 
-			if (str.Contains("Executed DbCommand") && str.Contains("SELECT [t0].[PeoplePersonId], [t0].[TeamsId], [t0].[Id], [t0].[Name], [p].[PersonId]"))
+			//EF9
+			/*
+			 info: 19/11/2024 09:45:03.415 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command)
+			  Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+			  SELECT [s].[PeoplePersonId], [s].[TeamsId], [s].[Id], [s].[Name], [p].[PersonId]
+			  FROM [People] AS [p]
+			  INNER JOIN (
+				  SELECT [p1].[PeoplePersonId], [p1].[TeamsId], [t].[Id], [t].[Name]
+				  FROM [PersonTeam] AS [p1]
+				  INNER JOIN [Teams] AS [t] ON [p1].[TeamsId] = [t].[Id]
+			  ) AS [s] ON [p].[PersonId] = [s].[PeoplePersonId]
+			  ORDER BY [p].[PersonId], [s].[PeoplePersonId], [s].[TeamsId], [s].[Id]
+			*/
+			if (str.Contains("Executed DbCommand") &&
+				(str.Contains("SELECT [t0].[PeoplePersonId], [t0].[TeamsId], [t0].[Id], [t0].[Name], [p].[PersonId]") //EF8
+				|| str.Contains("SELECT [s].[PeoplePersonId], [s].[TeamsId], [s].[Id], [s].[Name], [p].[PersonId]"))) //EF9
 			{
 				Console.WriteLine(" ----- Inserting in a new row like a race condition ----- ");
 
