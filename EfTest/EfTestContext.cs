@@ -58,13 +58,13 @@ public class EfTestContext : DbContext
 
 				using var context = new EfTestContext();
 
-				var person = context.People.Single(p => p.PersonId == 3);
+				var person = context.People.Single(p => p.PersonId == 30);
 				context.Add(new Team
 				{
-					Id = 20,
+					Id = 201,
 					Name = "Team20",
 					People = [person],
-					Vehicles = [new() { Id = 20, Name = "Vehicle20" }]
+					Vehicles = [new() { Id = 202, Name = "Vehicle20" }]
 				});
 				context.SaveChanges();
 				Console.WriteLine(" ----- End Insert ----- ");
