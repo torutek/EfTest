@@ -19,13 +19,16 @@ public class EfTestContext : DbContext
 		optionsBuilder.EnableDetailedErrors();
 		optionsBuilder.LogTo((str) =>
 		{
+			if (!str.StartsWith("dbug"))
+				Console.WriteLine(str);
+
 			//When EF has just ran the second query (to get teams), add a new team with a new vehicle
 			/*
 			  info: 19/11/2024 09:20:59.994 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command)
 			  Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
 			  SELECT [t0].[PeoplePersonId], [t0].[TeamsId], [t0].[Id], [t0].[Name], [p].[PersonId]
 			  FROM [People] AS [p]
-			  INNER JOIN (
+			  INNER JOIN (	
 				  SELECT [p0].[PeoplePersonId], [p0].[TeamsId], [t].[Id], [t].[Name]
 				  FROM [PersonTeam] AS [p0]
 				  INNER JOIN [Teams] AS [t] ON [p0].[TeamsId] = [t].[Id]
@@ -35,7 +38,7 @@ public class EfTestContext : DbContext
 
 			if (str.Contains("Executed DbCommand") && str.Contains("SELECT [t0].[PeoplePersonId], [t0].[TeamsId], [t0].[Id], [t0].[Name], [p].[PersonId]"))
 			{
-				Console.WriteLine(" ----- Hacking in a new row like a race condition ----- ");
+				Console.WriteLine(" ----- Inserting in a new row like a race condition ----- ");
 
 				using var context = new EfTestContext();
 
@@ -48,10 +51,9 @@ public class EfTestContext : DbContext
 					Vehicles = [new() { Id = 20, Name = "Vehicle20" }]
 				});
 				context.SaveChanges();
+				Console.WriteLine(" ----- End Insert ----- ");
 			}
 
-
-			Console.WriteLine(str);
 		});
 	}
 }
