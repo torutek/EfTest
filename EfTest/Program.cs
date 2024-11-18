@@ -61,6 +61,13 @@ using (var context = new EfTestContext())
 		.Include(p => p.Teams).ThenInclude(h => h.Vehicles)
 		.AsSplitQuery();
 
+	//You can work around the issue using a transaction here
+	// Serializable blocks during the insert, so it would probably work
+	// Snapshot works if it has been allowed in the database
+	//  https://learn.microsoft.com/en-us/troubleshoot/sql/analysis-services/enable-snapshot-transaction-isolation-level
+	// ReadCommitted + enabling READ_COMMITTED_SNAPSHOT still breaks
+	//  https://learn.microsoft.com/en-us/sql/t-sql/statements/set-transaction-isolation-level-transact-sql?view=sql-server-ver16
+	//using var transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted);
 
 	result = await query.ToArrayAsync();
 }
