@@ -75,3 +75,4 @@ using (var context = new EfTestContext())
 Console.WriteLine($"People {result.Length}:  {string.Join(", ", result.Select(p => p.PersonId).Order().ToArray())}");
 Console.WriteLine($"Teams {result.SelectMany(p => p.Teams).Count()}:  {string.Join(", ", result.SelectMany(p => p.Teams).Select(t => t.Id).Order().ToArray())}");
 Console.WriteLine($"Vehicles {result.SelectMany(p => p.Teams).SelectMany(t => t.Vehicles).Count()}:  {string.Join(", ", result.SelectMany(p => p.Teams).SelectMany(t => t.Vehicles).Select(v => v.Id).Order().ToArray())}");
+Console.WriteLine("Should be People 3, Teams 9, Vehicles 9");
