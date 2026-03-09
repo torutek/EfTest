@@ -37,7 +37,7 @@ public class EfTestContext : DbContext
 			  ORDER BY [p].[PersonId], [t0].[PeoplePersonId], [t0].[TeamsId], [t0].[Id]
 			*/
 
-			//EF9
+			//EF9, 10
 			/*
 			 info: 19/11/2024 09:45:03.415 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command)
 			  Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -52,7 +52,7 @@ public class EfTestContext : DbContext
 			*/
 			if (str.Contains("Executed DbCommand") &&
 				(str.Contains("SELECT [t0].[PeoplePersonId], [t0].[TeamsId], [t0].[Id], [t0].[Name], [p].[PersonId]") //EF8
-				|| str.Contains("SELECT [s].[PeoplePersonId], [s].[TeamsId], [s].[Id], [s].[Name], [p].[PersonId]"))) //EF9
+				|| str.Contains("SELECT [s].[PeoplePersonId], [s].[TeamsId], [s].[Id], [s].[Name], [p].[PersonId]"))) //EF9, 10
 			{
 				Console.WriteLine(" ----- Inserting in a new row like a race condition ----- ");
 
